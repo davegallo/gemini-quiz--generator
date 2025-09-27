@@ -1,0 +1,178 @@
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Mobile-first responsive design */
+.gemini-quiz-container {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    margin: 20px 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+.quiz-card {
+    background: #ffffff;
+    border: 2px solid #de200b;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(222, 32, 11, 0.15);
+    overflow: hidden;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.quiz-header {
+    background: linear-gradient(135deg, #de200b 0%, #b91c0c 100%);
+    color: white;
+    padding: 24px 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin: -20px -20px 24px -20px;
+}
+
+.quiz-header h2 {
+    margin: 0;
+    font-size: clamp(20px, 4vw, 28px);
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.quiz-header p {
+    margin: 12px 0 0 0;
+    opacity: 0.95;
+    font-size: clamp(14px, 3vw, 16px);
+}
+
+.gemini-quiz-start-button {
+    background: linear-gradient(135deg, #de200b 0%, #b91c0c 100%);
+    color: white !important;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: clamp(16px, 3.5vw, 18px);
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(222, 32, 11, 0.3);
+    transition: all 0.3s ease;
+    min-height: 48px;
+    min-width: 120px;
+}
+
+/* Button hover effects */
+.gemini-quiz-start-button:hover, .gemini-quiz-next-button:hover, .gemini-quiz-reset-button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(222, 32, 11, 0.4) !important;
+}
+
+.gemini-quiz-start-button:active, .gemini-quiz-next-button:active, .gemini-quiz-reset-button:active {
+    transform: translateY(0) !important;
+}
+
+.gemini-quiz-option-button {
+    display: block;
+    width: 100%;
+    padding: 16px 20px;
+    margin: 12px 0;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background: #ffffff;
+    cursor: pointer;
+    text-align: left;
+    font-size: clamp(14px, 3.5vw, 16px);
+    line-height: 1.5;
+    color: #333333 !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    min-height: 56px;
+    box-sizing: border-box;
+}
+
+.gemini-quiz-option-button:hover {
+    border-color: #de200b;
+    background-color: #fef7f7;
+}
+
+.gemini-quiz-option-button.correct {
+    border: 2px solid #28a745;
+    background: #d4edda;
+    color: #155724 !important;
+    font-weight: 600;
+    cursor: default;
+}
+
+.gemini-quiz-option-button.incorrect {
+    border: 2px solid #dc3545;
+    background: #f8d7da;
+    color: #721c24 !important;
+    font-weight: 600;
+    cursor: default;
+}
+
+.gemini-quiz-option-button:disabled {
+    cursor: default;
+}
+
+.gemini-quiz-explanation {
+    margin: 24px 0;
+    padding: 20px;
+    background: #fef7f7;
+    border-radius: 8px;
+    border-left: 4px solid #de200b;
+}
+
+.gemini-quiz-explanation strong {
+    color: #de200b;
+    font-size: clamp(15px, 3.5vw, 17px);
+}
+
+.gemini-quiz-explanation span {
+    color: #333;
+    font-size: clamp(14px, 3.5vw, 16px);
+    line-height: 1.6;
+}
+
+/* Responsive text sizing */
+@media (max-width: 768px) {
+    .gemini-quiz-container {
+        margin: 15px 0 !important;
+    }
+
+    .quiz-card {
+        padding: 16px !important;
+        border-radius: 8px !important;
+    }
+
+    .quiz-header {
+        padding: 20px 16px !important;
+        margin: -16px -16px 20px -16px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .quiz-card {
+        padding: 12px !important;
+    }
+
+    .quiz-header {
+        padding: 16px 12px !important;
+        margin: -12px -12px 16px -12px !important;
+    }
+}
+
+/* Ensure text is always visible */
+.gemini-quiz-container * {
+    text-decoration: none !important;
+}
+
+.gemini-quiz-container button {
+    color: white !important;
+}
+
+/* High contrast for accessibility */
+@media (prefers-contrast: high) {
+    .gemini-quiz-option-button {
+        border-width: 3px !important;
+    }
+}
