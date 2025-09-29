@@ -17,14 +17,14 @@ if (!defined('ABSPATH')) {
 define('GEMINI_QUIZ_VERSION', '1.6.4');
 
 /**
- * Initialize the plugin
+ * Register REST API routes.
  */
-add_action('init', 'gemini_quiz_init');
+add_action('rest_api_init', 'gemini_quiz_register_rest_routes');
 
-function gemini_quiz_init() {
-    add_action('rest_api_init', 'gemini_quiz_register_rest_routes');
-    add_action('wp_enqueue_scripts', 'gemini_quiz_enqueue_assets');
-}
+/**
+ * Enqueue styles and scripts.
+ */
+add_action('wp_enqueue_scripts', 'gemini_quiz_enqueue_assets');
 
 /**
  * Register REST API routes
@@ -33,7 +33,7 @@ function gemini_quiz_register_rest_routes() {
     register_rest_route('quiz-generator/v1', '/generate', array(
         'methods' => 'POST',
         'callback' => 'gemini_quiz_generate_quiz',
-        'permission_callback' => '__return_true',
+        'permission_callback' => 'gemini_quiz_permission_callback',
         'args' => array(
             'article' => array(
                 'required' => true,
@@ -93,6 +93,17 @@ function gemini_quiz_generate_quiz($request) {
 }
 
 /**
+ * Permission callback for the REST API endpoint.
+ *
+ * @param WP_REST_Request $request
+ * @return bool
+ */
+function gemini_quiz_permission_callback(WP_REST_Request $request) {
+    $nonce = $request->get_header('X-WP-Nonce');
+    return wp_verify_nonce($nonce, 'wp_rest');
+}
+
+/**
  * Call Gemini API to generate quiz
  */
 function gemini_quiz_call_api($article, $api_key) {
@@ -129,13 +140,13 @@ function gemini_quiz_call_api($article, $api_key) {
     $response_body = wp_remote_retrieve_body($response);
 
     if ($response_code !== 200) {
-        return new WP_Error('api_error', 'Gemini API returned error: ' . $response_code, array('status' => 500));
+        return new WP_Error('api_error', 'Gemini API returned an error. Code: ' . $response_code . '. Body: ' . $response_body, array('status' => 500));
     }
 
     $data = json_decode($response_body, true);
 
     if (!$data || !isset($data['candidates'][0]['content']['parts'][0]['text'])) {
-        return new WP_Error('invalid_response', 'Invalid response from Gemini API', array('status' => 500));
+        return new WP_Error('invalid_response', 'Invalid response from Gemini API. Body: ' . $response_body, array('status' => 500));
     }
 
     $quiz_text = $data['candidates'][0]['content']['parts'][0]['text'];
@@ -202,9 +213,18 @@ function gemini_quiz_enqueue_assets() {
         wp_enqueue_script(
             'gemini-quiz-script',
             plugin_dir_url(__FILE__) . 'gemini-quiz.js',
-            array(),
+            array('wp-api-fetch'),
             GEMINI_QUIZ_VERSION,
             true
+        );
+
+        wp_localize_script(
+            'gemini-quiz-script',
+            'geminiQuizData',
+            array(
+                'nonce' => wp_create_nonce('wp_rest'),
+                'api_url' => esc_url_raw(rest_url('quiz-generator/v1/generate')),
+            )
         );
     }
 }

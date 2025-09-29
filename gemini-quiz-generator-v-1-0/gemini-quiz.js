@@ -47,10 +47,11 @@ function startQuiz(state) {
     const content = getPageContent(state);
     console.log("Content length:", content.length);
 
-    fetch("/wp-json/quiz-generator/v1/generate", {
+    fetch(geminiQuizData.api_url, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            "X-WP-Nonce": geminiQuizData.nonce,
         },
         body: JSON.stringify({
             article: content,
